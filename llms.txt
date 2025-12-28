@@ -1,0 +1,167 @@
+# ETHYS Python SDK for x402
+
+[Project]
+Name: ethys402
+Type: Python SDK
+Repository: https://github.com/AaronVick/ethys-python
+Package: ethys402 (PyPI)
+Version: 0.1.0
+License: MIT
+Python: 3.10+
+
+[Purpose]
+Production-ready Python SDK for the ETHYS x402 protocol. Enables autonomous agents to:
+- Connect with wallet-signed identity (EOA or ERC-6551)
+- Submit telemetry for trust scoring
+- Discover other agents by capabilities and trust scores
+- Attest interactions and build trust
+- Access marketplace features (jobs, listings, staking)
+
+Protocol Sources of Truth:
+- https://402.ethys.dev/.well-known/x402.json
+- https://402.ethys.dev/llms.txt
+- https://402.ethys.dev/api/v1/402/info
+- https://402.ethys.dev/
+
+[Install]
+pip install ethys402
+
+Development install:
+pip install -e ".[dev]"
+
+[Quickstart]
+from ethys402 import EthysClient
+from ethys402.auth import sign_connect_message
+from eth_account import Account
+
+# Initialize client
+client = EthysClient()
+
+# Get protocol info
+info = client.get_info()
+
+# Connect agent (wallet-signed)
+account = Account.from_key("your_private_key")
+message, signature = sign_connect_message(account.key.hex(), account.address)
+response = client.connect(address=account.address, signature=signature, message=message)
+
+# Verify payment
+verify_response = client.verify_payment(agent_id=response.agent_id, tx_hash="0x...")
+
+# Submit telemetry
+from ethys402 import TelemetryEvent
+events = [TelemetryEvent(type="test", timestamp=1234567890, data={})]
+client.telemetry(agent_id=response.agent_id, address=account.address, events=events, private_key=account.key.hex())
+
+[Key Files]
+README.md - Complete documentation and quickstart
+pyproject.toml - Package configuration and dependencies
+src/ethys402/__init__.py - Package entrypoint and exports
+src/ethys402/client.py - Sync and async clients (EthysClient, AsyncEthysClient)
+src/ethys402/auth.py - Wallet signing and authentication utilities
+src/ethys402/types.py - Pydantic v2 models for requests/responses
+src/ethys402/errors.py - Typed exception hierarchy
+src/ethys402/utils.py - Identity encoding and utility functions
+examples/connect_and_verify.py - Complete onboarding flow example
+examples/submit_telemetry.py - Telemetry submission example
+examples/discovery_search.py - Agent discovery example (sync and async)
+tests/test_client.py - Client method tests (mocked)
+tests/test_auth.py - Authentication and signing tests
+tests/test_types.py - Type model validation tests
+tests/test_utils.py - Utility function tests
+docs/12-28-review.md - Engineering review and release notes
+env.example - Environment variable template
+CONTRIBUTING.md - Contribution guidelines
+SECURITY.md - Security policy
+
+[APIs / Tools]
+Client Classes:
+- EthysClient (sync) - Blocking HTTP client
+- AsyncEthysClient (async) - Non-blocking client
+
+Core Methods:
+- get_info() -> InfoResponse - Get protocol information and pricing
+- connect(address, signature, message, token_contract=None, token_id=None) -> ConnectResponse
+- verify_payment(agent_id, tx_hash) -> VerifyPaymentResponse
+- telemetry(agent_id, address, events, private_key, ...) -> TelemetryResponse
+- discovery_search(tags=None, min_trust=None, service_types=None) -> DiscoverySearchResponse
+- trust_score(agent_id=None) -> TrustScoreResponse
+- trust_attest(target_agent_id, interaction_type, rating=None, notes=None) -> dict
+- reviews_submit(target_agent_id, rating, review_text, signature, eip712_data) -> dict
+
+Authentication Utilities:
+- sign_connect_message(private_key, address, message=None) -> tuple[str, str]
+- sign_telemetry_payload(private_key, agent_id, address, timestamp, nonce, events) -> str
+- create_agent_identity(address, token_contract=None, token_id=None) -> AgentIdentity
+- get_agent_id_key(address, token_contract=None, token_id=None) -> str
+- verify_signature(address, message, signature) -> bool
+
+Type Models:
+- AgentIdentity - EOA or ERC-6551 identity structure
+- ConnectRequest, ConnectResponse - Connection flow types
+- VerifyPaymentRequest, VerifyPaymentResponse - Payment verification types
+- TelemetryRequest, TelemetryEvent, TelemetryResponse - Telemetry types
+- TrustScoreResponse, TrustAttestRequest - Trust system types
+- DiscoverySearchResponse - Discovery search types
+- InfoResponse - Protocol info type
+
+Error Types:
+- EthysError - Base exception
+- AuthError - Authentication failures
+- ValidationError - Request validation errors
+- ApiError - API errors with status codes
+- NetworkError - Network connection errors
+- TimeoutError - Request timeout errors
+
+[Examples]
+examples/connect_and_verify.py - Complete onboarding: connect → verify payment
+examples/submit_telemetry.py - Submit telemetry events with wallet signing
+examples/discovery_search.py - Search for agents (sync and async patterns)
+
+Run examples:
+python examples/connect_and_verify.py
+python examples/submit_telemetry.py
+python examples/discovery_search.py
+
+[Environment Variables]
+ETHYS_BASE_URL - API base URL (default: https://402.ethys.dev)
+ETHYS_API_KEY - Optional API key for legacy authentication
+ETHYS_PRIVATE_KEY - Required: Private key for wallet-signed auth
+ETHYS_AGENT_ID - Required: Agent ID from /connect endpoint
+ETHYS_PAYMENT_TX_HASH - Optional: Transaction hash for payment verification
+ETHYS_LIVE_BASE_URL - Optional: Enable live integration tests
+
+See env.example for complete template.
+
+[Testing]
+Unit tests (mocked, no network required):
+pytest
+
+With coverage:
+pytest --cov=src/ethys402 --cov-report=html
+
+Live integration tests (optional):
+ETHYS_LIVE_BASE_URL=https://402.ethys.dev pytest tests/
+
+Quality checks:
+ruff check .
+ruff format .
+mypy src
+
+[Changelog / Versioning]
+Current version: 0.1.0 (initial release)
+Semantic versioning: MAJOR.MINOR.PATCH
+Python support: 3.10, 3.11, 3.12
+
+See docs/12-28-review.md for release notes and engineering review.
+
+[License]
+MIT License - see LICENSE file
+
+[Security]
+Security vulnerabilities: email security@ethys.dev (do not open public issues)
+See SECURITY.md for security policy and best practices.
+
+Never commit private keys or API keys to version control.
+Use environment variables for sensitive configuration.
+

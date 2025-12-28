@@ -1,0 +1,120 @@
+{
+  "name": "ethys-python-sdk",
+  "description": "Python SDK for ETHYS x402 protocol - enables agents to connect, submit telemetry, discover other agents, and build trust on Base L2",
+  "repo_url": "https://github.com/AaronVick/ethys-python",
+  "package_name": "ethys402",
+  "version": "0.1.0",
+  "languages": ["python"],
+  "python_versions": ["3.10", "3.11", "3.12"],
+  "frameworks": [],
+  "primary_use_cases": [
+    "autonomous-agent-onboarding",
+    "wallet-signed-authentication",
+    "telemetry-submission",
+    "agent-discovery",
+    "trust-scoring",
+    "trust-attestation"
+  ],
+  "docs_paths": [
+    "README.md",
+    "llms.txt",
+    "docs/12-28-review.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md"
+  ],
+  "code_paths": [
+    "src/ethys402/__init__.py",
+    "src/ethys402/client.py",
+    "src/ethys402/auth.py",
+    "src/ethys402/types.py",
+    "src/ethys402/errors.py",
+    "src/ethys402/utils.py"
+  ],
+  "examples_paths": [
+    "examples/connect_and_verify.py",
+    "examples/submit_telemetry.py",
+    "examples/discovery_search.py"
+  ],
+  "entrypoints": {
+    "python_import": "from ethys402 import EthysClient, AsyncEthysClient",
+    "main_clients": [
+      "EthysClient",
+      "AsyncEthysClient"
+    ],
+    "auth_utilities": [
+      "sign_connect_message",
+      "sign_telemetry_payload",
+      "create_agent_identity",
+      "get_agent_id_key"
+    ],
+    "error_types": [
+      "EthysError",
+      "AuthError",
+      "ValidationError",
+      "ApiError",
+      "NetworkError",
+      "TimeoutError"
+    ]
+  },
+  "capabilities": {
+    "authentication": {
+      "methods": ["wallet-signature", "api-key"],
+      "primary": "wallet-signature",
+      "identity_types": ["EOA", "ERC-6551"]
+    },
+    "endpoints": {
+      "get_info": "GET /api/v1/402/info - Protocol information and pricing",
+      "connect": "POST /api/v1/402/connect - Connect agent with wallet signature",
+      "verify_payment": "POST /api/v1/402/verify-payment - Verify payment transaction",
+      "telemetry": "POST /api/v1/402/telemetry - Submit telemetry events",
+      "discovery_search": "GET /api/v1/402/discovery/search - Search agents",
+      "trust_score": "GET /api/v1/402/trust/score - Get trust score",
+      "trust_attest": "POST /api/v1/402/trust/attest - Submit attestation",
+      "reviews_submit": "POST /api/v1/402/reviews/submit - Submit review (EIP-712)"
+    },
+    "client_types": ["sync", "async"]
+  },
+  "test_command": "pytest",
+  "lint_command": "ruff check . && ruff format --check .",
+  "typecheck_command": "mypy src",
+  "install_command": "pip install ethys402",
+  "dev_install_command": "pip install -e \".[dev]\"",
+  "environment_variables": {
+    "ETHYS_BASE_URL": {
+      "required": false,
+      "description": "API base URL",
+      "default": "https://402.ethys.dev"
+    },
+    "ETHYS_API_KEY": {
+      "required": false,
+      "description": "API key for legacy authentication"
+    },
+    "ETHYS_PRIVATE_KEY": {
+      "required": true,
+      "description": "Private key for wallet-signed authentication",
+      "sensitive": true
+    },
+    "ETHYS_AGENT_ID": {
+      "required": true,
+      "description": "Agent ID from /connect endpoint"
+    },
+    "ETHYS_PAYMENT_TX_HASH": {
+      "required": false,
+      "description": "Transaction hash for payment verification"
+    }
+  },
+  "protocol_sources": {
+    "discovery": "https://402.ethys.dev/.well-known/x402.json",
+    "llm_index": "https://402.ethys.dev/llms.txt",
+    "api_info": "https://402.ethys.dev/api/v1/402/info",
+    "documentation": "https://402.ethys.dev/"
+  },
+  "safety_notes": [
+    "Never commit private keys or API keys to version control",
+    "Use environment variables for sensitive configuration",
+    "Avoid unlimited token approvals by default",
+    "Rotate keys regularly if compromised",
+    "Use hardware wallets for production agents when possible"
+  ]
+}
+

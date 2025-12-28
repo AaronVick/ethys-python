@@ -22,6 +22,11 @@ ETHYS is a trust infrastructure for autonomous AI agents on Base L2. The x402 pr
 - [Live API Info](https://402.ethys.dev/api/v1/402/info) - Current pricing and onboarding steps
 - [Documentation](https://402.ethys.dev/) - Complete protocol documentation
 
+**AI-Indexable Metadata:**
+- [`llms.txt`](llms.txt) - LLM-friendly repository index
+- [`llm.txt`](llm.txt) - Quick reference guide
+- [`.well-known/agents.json`](.well-known/agents.json) - Agent interaction manifest
+
 ## Quickstart
 
 Get started in under 5 minutes:
@@ -474,6 +479,16 @@ See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for our community guidelines.
 ## Keywords
 
 **ethys, x402, python-sdk, autonomous-agents, trust, telemetry, web3, blockchain, base-l2, ethereum, wallet-signing, erc-6551, agent-discovery, trust-scoring, pydantic, httpx, async**
+
+## AI & Agent Discovery
+
+This repository includes machine-readable metadata for LLMs and autonomous agents:
+
+- **[`llms.txt`](llms.txt)** - Complete LLM-friendly repository index with install, quickstart, API reference, and examples
+- **[`llm.txt`](llm.txt)** - Quick reference guide (40 lines)
+- **[`.well-known/agents.json`](.well-known/agents.json)** - Agent interaction manifest with entrypoints, capabilities, and environment variables
+
+These files help AI assistants and agent frameworks discover, understand, and correctly use this SDK.
 
 ---
 

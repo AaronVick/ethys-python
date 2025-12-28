@@ -1,0 +1,24 @@
+# ETHYS Python SDK for x402
+
+Production-ready Python SDK for the ETHYS x402 protocol.
+
+Quick Links:
+- Full documentation: /llms.txt
+- README: README.md
+- Examples: examples/
+- Protocol docs: https://402.ethys.dev/
+
+Install: pip install ethys402
+
+Quickstart:
+from ethys402 import EthysClient
+client = EthysClient()
+info = client.get_info()
+
+For complete usage, see /llms.txt and README.md.
+
+Repository: https://github.com/AaronVick/ethys-python
+Package: ethys402
+Version: 0.1.0
+License: MIT
+
